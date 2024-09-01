@@ -9,6 +9,13 @@ towns_flat = ['#BaronTown', '#Mist', '#Kaipo', '#Mysidia', '#Silvera', '#ToroiaT
               '#Feymarch1F', "#Feymarch2F", "#CaveOfSummons1F","#SylvanCave1F"]
 
 
+DIRECTION_MAP = {
+    'up': 0,
+    'right': 1,
+    'down': 2,
+    'left': 3,
+}
+
 def map_exit_to_entrance(remapped_entrances, exit):
     try:
         entrance_key = f"{exit[4]}_{exit[0]}_{exit[7]}"
@@ -268,15 +275,16 @@ def apply(env, rom_base, testing=False):
         script += (
             f'trigger({i[0]} {i[1]}) {{\n'
             f'position {i[2]} {i[3]}\n'
-            # f'teleport {i[5]} at {index >> 8} {index & 0xFF}'
             f'teleport #EndingFabulThroneRoom at {index >> 8} {index & 0xFF}'
         )
 
+        x_coord = i[6]
         if i[5] not in ["#Overworld", "#Underworld", "#Moon"]:
-            script += " facing {8}\n".format(*i)
-        script += f'// {i[5]} at {i[6]} {i[7]}\n'
+            x_coord |= (DIRECTION_MAP[i[8]] << 6)
+        script += f'  // [${index:04X}] {i[5]} at {i[6]} {i[7]}\n'
+        script += f'facing up'
         script += '}\n\n'
-        special_triggers.append(f"##map.{i[5][1:]} {i[6]:X} {i[7]:X}")
+        special_triggers.append(f"##map.{i[5][1:]} {x_coord:X} {i[7]:X}")
         # random assignment just for testing:
         # map_id = env.rnd.randint(0, 0x17E)
         # special_triggers.append(f"{map_id & 0xFF:02X} {map_id >> 8:02X} 90 10")
