@@ -96,9 +96,9 @@ msfpatch {
     %GoingOutdoors:
         phx
         ldx #$8b2b
-        jml $=Bank00LongCall
+        jsl $=Bank00LongCallX
         ldx #$9021
-        jml $=Bank00LongCall
+        jsl $=Bank00LongCallX
         plx
     // grab and set map area
         lda $=Wacky__ROMData_doorsrando,x
