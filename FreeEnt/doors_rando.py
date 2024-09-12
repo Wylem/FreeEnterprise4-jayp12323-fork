@@ -146,7 +146,7 @@ def has_exit(graph, town, towns_with_exit, checked=[], stack=[], count=0):
             return False
 
 
-def apply(env, rom_base, testing=False):
+def apply(env, testing=False):
     doors_view = databases.get_doors_dbview()
 
     shuffled_entrances = {"#Overworld": [], "#Underworld": [], "#Moon": []}
@@ -296,7 +296,7 @@ def apply(env, rom_base, testing=False):
 
         env.add_script(script)
         special_triggers_script = '\n'.join(special_triggers)
-        env.add_script(f'patch(${rom_base.get_bus():06X} bus) {{\n{special_triggers_script}\n}}')
+        env.add_script(f'patch($21e000 bus) {{\n{special_triggers_script}\n}}')
     # print(script)
 
     towns_map = []
